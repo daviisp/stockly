@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id     String  @id @default(uuid())
+  name   String
+  price  Decimal @db.Decimal(10, 2)
+  stock  Int
+  userId String  @map("user_id")
+
+  @@map("products")
+}
+
+model Sale {
+  id              String  @id @default(uuid())
+  productId       String  @unique @map("product_id")
+  productName     String  @map("product_name")
+  productQuantity Int     @map("product_quantity")
+  unitPrice       Decimal @map("unit_price") @db.Decimal(10, 2)
+  userId          String  @map("user_id")
+
+  @@map("sales")
+}
