@@ -14,16 +14,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Session } from "next-auth";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { LockClosedIcon, PersonIcon } from "@radix-ui/react-icons";
-import { signOut } from "next-auth/react";
 import { UserDropdown } from "./user-dropdown";
 
 type SidebarMobileProps = {
