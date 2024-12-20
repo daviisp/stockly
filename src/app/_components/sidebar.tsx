@@ -5,8 +5,14 @@ import Link from "next/link";
 import { LayoutGridIcon, PackageIcon, ShoppingBasketIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
+import { Session } from "next-auth";
+import { UserDropdown } from "./user-dropdown";
 
-export const Sidebar = () => {
+type SidebarProps = {
+  user: Session["user"];
+};
+
+export const Sidebar = ({ user }: SidebarProps) => {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
@@ -67,6 +73,9 @@ export const Sidebar = () => {
           </Link>
         </Button>
       </nav>
+      <div className="border-t mt-96 px-2">
+        <UserDropdown user={user} />
+      </div>
     </aside>
   );
 };

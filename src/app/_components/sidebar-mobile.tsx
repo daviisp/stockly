@@ -13,8 +13,24 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { Session } from "next-auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LockClosedIcon, PersonIcon } from "@radix-ui/react-icons";
+import { signOut } from "next-auth/react";
+import { UserDropdown } from "./user-dropdown";
 
-export const SidebarMobile = () => {
+type SidebarMobileProps = {
+  user: Session["user"];
+};
+
+export const SidebarMobile = ({ user }: SidebarMobileProps) => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -98,6 +114,9 @@ export const SidebarMobile = () => {
             </Link>
           </Button>
         </nav>
+        <div className="border-t mt-80 p-4">
+          <UserDropdown user={user} />
+        </div>
       </aside>
 
       {isOpen && (
