@@ -9,7 +9,7 @@ const ProductsPage = async () => {
   return (
     <div>
       <TitleWithSubtitle title="Gestão de Produtos" subtitle="Produtos" />
-      <DataTable data={products!} columns={productTableColumns} />
+      <DataTable data={products} columns={productTableColumns} />
     </div>
   );
 };

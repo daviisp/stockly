@@ -1,9 +1,9 @@
 "use client";
 
-import { Product } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
+import { ProductsDto } from "../_data-access/get-products";
 
-export const productTableColumns: ColumnDef<Product>[] = [
+export const productTableColumns: ColumnDef<ProductsDto>[] = [
   {
     accessorKey: "name",
     header: "Produto",
