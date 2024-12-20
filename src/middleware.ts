@@ -9,12 +9,16 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(getUrl("/dashboard")));
   }
 
-  if (
-    (!token && pathname === "/") ||
-    (!token && pathname === "/dashboard") ||
-    (!token && pathname === "/products") ||
-    (!token && pathname === "/sales")
-  ) {
+  const restrictedPaths = [
+    "/",
+    "/dashboard",
+    "/products",
+    "/sales",
+    "/settings",
+    "/profile",
+  ];
+
+  if (!token && restrictedPaths.includes(pathname)) {
     return NextResponse.redirect(new URL(getUrl("/auth")));
   }
 
