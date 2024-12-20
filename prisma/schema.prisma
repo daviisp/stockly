@@ -15,8 +15,9 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  // Optional for WebAuthn support
   Authenticator Authenticator[]
+  products      Product[]
+  sales         Sale[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -61,7 +62,6 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
-// Optional for WebAuthn support
 model Authenticator {
   credentialID         String  @unique
   userId               String
@@ -82,18 +82,28 @@ model Product {
   name   String
   price  Decimal @db.Decimal(10, 2)
   stock  Int
-  userId String  @map("user_id")
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("products")
 }
 
 model Sale {
   id              String  @id @default(uuid())
-  productId       String  @unique @map("product_id")
+  productId       String  @map("product_id")
   productName     String  @map("product_name")
   productQuantity Int     @map("product_quantity")
   unitPrice       Decimal @map("unit_price") @db.Decimal(10, 2)
-  userId          String  @map("user_id")
+  userId          String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("sales")
 }
