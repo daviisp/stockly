@@ -6,13 +6,13 @@ import { auth } from "@/services/auth";
 export const getProducts = async () => {
   const session = await auth();
 
-  if (!session) {
+  if (!session?.user) {
     return;
   }
 
   return await prisma.product.findMany({
     where: {
-      userId: session?.user?.id as string,
+      userId: session.user.id,
     },
   });
 };
