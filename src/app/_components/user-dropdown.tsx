@@ -29,7 +29,7 @@ export const UserDropdown = ({ user }: UserDropdownProps) => {
           width={45}
           height={45}
           alt={user?.name as string}
-          className="rounded-full mt-5"
+          className="rounded-full mt-5 object-cover bg-center w-11 h-11"
           unoptimized
         />
       </DropdownMenuTrigger>
