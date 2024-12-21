@@ -4,6 +4,7 @@ import "./globals.css";
 import { SidebarMobile } from "./_components/sidebar-mobile";
 import { Sidebar } from "./_components/sidebar";
 import { auth } from "@/services/auth";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -31,6 +32,7 @@ export default async function RootLayout({
           {session && <Sidebar user={session.user} />}
           <main className="flex-1 overflow-auto p-8">{children}</main>
         </div>
+        <Toaster />
       </body>
     </html>
   );
