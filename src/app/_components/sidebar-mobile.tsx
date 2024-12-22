@@ -32,7 +32,7 @@ export const SidebarMobile = ({ user }: SidebarMobileProps) => {
 
   return (
     <div className="block sm:hidden">
-      <div className="px-8 py-4">
+      <div className="px-5 py-4">
         <Button className="bg-gray-200" onClick={toggleSidebar} variant="ghost">
           <Menu />
         </Button>
@@ -104,7 +104,7 @@ export const SidebarMobile = ({ user }: SidebarMobileProps) => {
             </Link>
           </Button>
         </nav>
-        <div className="border-t mt-80 p-4">
+        <div className="border-t mt-80 px-4 py-2">
           <UserDropdown user={user} />
         </div>
       </aside>

@@ -20,7 +20,7 @@ export const Sidebar = ({ user }: SidebarProps) => {
   };
 
   return (
-    <aside className="hidden sm:block bg-white min-w-72 max-w-72 h-full">
+    <aside className="hidden sm:block bg-white min-w-64 h-full">
       <div className="py-6 pl-8">
         <Image
           src="/logo.svg"
@@ -73,7 +73,7 @@ export const Sidebar = ({ user }: SidebarProps) => {
           </Link>
         </Button>
       </nav>
-      <div className="border-t mt-96 px-2">
+      <div className="border-t mt-[420px] px-2 py-2">
         <UserDropdown user={user} />
       </div>
     </aside>
