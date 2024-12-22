@@ -8,8 +8,8 @@ const ProductsPage = async () => {
   const products = await getProducts();
 
   return (
-    <div className="bg-white h-full p-5 rounded-md">
-      <div className="flex justify-between items-center pb-8 sm:pb-0">
+    <div>
+      <div className="flex justify-between items-center pb-8 sm:pb-4">
         <TitleWithSubtitle title="Gestão de Produtos" subtitle="Produtos" />
         <CreateProduct />
       </div>
