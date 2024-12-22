@@ -30,7 +30,7 @@ export default async function RootLayout({
         {session && <SidebarMobile user={session.user} />}
         <div className="flex h-screen">
           {session && <Sidebar user={session.user} />}
-          <main className="flex-1 overflow-auto p-8">{children}</main>
+          <main className="flex-1 p-5 sm:p-8">{children}</main>
         </div>
         <Toaster />
       </body>
