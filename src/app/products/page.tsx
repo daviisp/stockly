@@ -10,7 +10,7 @@ const ProductsPage = async () => {
   return (
     <div>
       <div className="flex justify-between items-center pb-8 sm:pb-4">
-        <TitleWithSubtitle title="Gestão de Produtos" subtitle="Produtos" />
+        <TitleWithSubtitle title="Produtos" subtitle="Gestão de Produtos" />
         <CreateProduct />
       </div>
       <DataTable data={products} columns={productTableColumns} />
