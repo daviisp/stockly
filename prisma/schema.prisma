@@ -94,7 +94,7 @@ model Product {
 
 model Sale {
   id              String  @id @default(uuid())
-  productId       String  @map("product_id")
+  productId       String  @unique @map("product_id")
   productName     String  @map("product_name")
   productQuantity Int     @map("product_quantity")
   unitPrice       Decimal @map("unit_price") @db.Decimal(10, 2)
