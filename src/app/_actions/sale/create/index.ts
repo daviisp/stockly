@@ -50,6 +50,7 @@ export const createSale = actionClient
             productName: productInDb.name,
             productQuantity: prod.quantity,
             unitPrice: productInDb.price,
+            totalPrice: Number(productInDb.price) * prod.quantity,
             userId: session.user?.id as string,
           },
         });

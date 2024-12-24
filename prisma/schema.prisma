@@ -98,6 +98,7 @@ model Sale {
   productName     String  @map("product_name")
   productQuantity Int     @map("product_quantity")
   unitPrice       Decimal @map("unit_price") @db.Decimal(10, 2)
+  totalPrice      Decimal @map("total_price") @db.Decimal(10, 2)
   userId          String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
