@@ -17,7 +17,7 @@ export const CreateProduct = () => {
           Novo produto
         </Button>
       </DialogTrigger>
-      <UpsertProductDialogContent onSuccess={() => setModalIsOpen(false)} />
+      <UpsertProductDialogContent closeModal={() => setModalIsOpen(false)} />
     </Dialog>
   );
 };

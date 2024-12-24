@@ -30,7 +30,7 @@ type EditSaleDialogContent = {
     productName: string;
     productQuantity: number;
   };
-  onSuccess: () => void;
+  closeModal: () => void;
 };
 
 const formSchema = z.object({
@@ -42,7 +42,7 @@ type FormSchema = z.infer<typeof formSchema>;
 
 export const EditSaleDialogContent = ({
   defaultValues,
-  onSuccess,
+  closeModal,
 }: EditSaleDialogContent) => {
   const { execute: executeUpdateSale } = useAction(updateSale, {
     onError: ({ error: { validationErrors } }) => {
@@ -52,6 +52,7 @@ export const EditSaleDialogContent = ({
     },
     onSuccess: () => {
       toast.success("Venda atualizada com sucesso!");
+      closeModal();
     },
   });
 

@@ -73,6 +73,8 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 export const CreateSale = ({ productOptions, products }: CreateSaleProps) => {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
   const { execute: executeCreateSale } = useAction(createSale, {
     onError: ({ error: { validationErrors } }) => {
       const flattenedValidationErrors =
@@ -80,6 +82,7 @@ export const CreateSale = ({ productOptions, products }: CreateSaleProps) => {
       toast.error(flattenedValidationErrors.formErrors[0]);
     },
     onSuccess: () => {
+      setModalIsOpen(false);
       toast.success("Venda criada com sucesso!");
     },
   });
@@ -164,7 +167,7 @@ export const CreateSale = ({ productOptions, products }: CreateSaleProps) => {
 
   return (
     <DropdownMenu>
-      <Sheet>
+      <Sheet open={modalIsOpen} onOpenChange={setModalIsOpen}>
         <SheetTrigger asChild>
           <Button>
             <PlusIcon />

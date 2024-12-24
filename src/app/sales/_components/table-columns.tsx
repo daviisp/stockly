@@ -91,7 +91,7 @@ export const saleTableColumns: ColumnDef<SalesDto>[] = [
                 productName: row.original.productName,
                 productQuantity: row.original.productQuantity,
               }}
-              onSuccess={() => setModalIsOpen(false)}
+              closeModal={() => setModalIsOpen(false)}
             />
           </Dialog>
           <DeleteSaleAlertDialogContent id={row.original.id} />
