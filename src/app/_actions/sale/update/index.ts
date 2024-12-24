@@ -16,6 +16,18 @@ export const updateSale = actionClient
       return;
     }
 
+    const sale = await prisma.sale.findUnique({
+      where: {
+        id: parsedInput.id,
+      },
+    });
+
+    if (!sale) {
+      returnValidationErrors(updateSaleSchema, {
+        _errors: ["Venda não encontrada"],
+      });
+    }
+
     const product = await prisma.product.findFirst({
       where: {
         id: parsedInput.productId,
@@ -28,9 +40,12 @@ export const updateSale = actionClient
       });
     }
 
-    if (product.stock < parsedInput.productQuantity) {
+    // Recalcular o estoque disponível
+    const availableStock = product.stock + sale.productQuantity;
+
+    if (parsedInput.productQuantity > availableStock) {
       returnValidationErrors(updateSaleSchema, {
-        _errors: ["Quantidade maior da que disponível em estoque"],
+        _errors: ["Quantidade maior do que disponível em estoque"],
       });
     }
 
@@ -41,8 +56,12 @@ export const updateSale = actionClient
         },
         data: {
           productQuantity: parsedInput.productQuantity,
+          totalPrice: Number(product.price) * parsedInput.productQuantity,
         },
       });
+
+      const stockAdjustment =
+        sale.productQuantity - parsedInput.productQuantity;
 
       await trx.product.update({
         where: {
@@ -50,7 +69,7 @@ export const updateSale = actionClient
         },
         data: {
           stock: {
-            decrement: parsedInput.productQuantity,
+            increment: stockAdjustment,
           },
         },
       });
