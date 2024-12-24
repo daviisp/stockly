@@ -1,53 +1,61 @@
 "use server";
 
 import { auth } from "@/services/auth";
-import { UpdateSaleSchema } from "./schema";
+import { updateSaleSchema } from "./schema";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { actionClient } from "@/lib/safe-action";
+import { returnValidationErrors } from "next-safe-action";
 
-export const updateSale = async (data: UpdateSaleSchema) => {
-  const session = await auth();
+export const updateSale = actionClient
+  .schema(updateSaleSchema)
+  .action(async ({ parsedInput }) => {
+    const session = await auth();
 
-  if (!session?.user) {
-    throw new Error("Usuário não autorizado.");
-  }
+    if (!session?.user) {
+      return;
+    }
 
-  const product = await prisma.product.findFirst({
-    where: {
-      id: data.productId,
-    },
-  });
-
-  if (!product) {
-    throw new Error("Venda não encontrada.");
-  }
-
-  if (product.stock < data.productQuantity) {
-    throw new Error("Quantidade maior da que disponível em estoque");
-  }
-
-  await prisma.sale.update({
-    where: {
-      id: data.id,
-    },
-    data: {
-      productQuantity: {
-        increment: data.productQuantity,
+    const product = await prisma.product.findFirst({
+      where: {
+        id: parsedInput.productId,
       },
-    },
-  });
+    });
 
-  await prisma.product.update({
-    where: {
-      id: data.productId,
-    },
-    data: {
-      stock: {
-        decrement: data.productQuantity,
-      },
-    },
-  });
+    if (!product) {
+      returnValidationErrors(updateSaleSchema, {
+        _errors: ["Produto não encontrado"],
+      });
+    }
 
-  revalidatePath("/sales");
-  revalidatePath("/products");
-};
+    if (product.stock < parsedInput.productQuantity) {
+      returnValidationErrors(updateSaleSchema, {
+        _errors: ["Quantidade maior da que disponível em estoque"],
+      });
+    }
+
+    await prisma.$transaction(async (trx) => {
+      await trx.sale.update({
+        where: {
+          id: parsedInput.id,
+        },
+        data: {
+          productQuantity: parsedInput.productQuantity,
+        },
+      });
+
+      await trx.product.update({
+        where: {
+          id: parsedInput.productId,
+        },
+        data: {
+          stock: {
+            decrement: parsedInput.productQuantity,
+          },
+        },
+      });
+    });
+
+    revalidatePath("/sales");
+    revalidatePath("/products");
+  });

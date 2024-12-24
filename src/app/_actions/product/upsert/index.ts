@@ -1,35 +1,36 @@
 "use server";
 
 import { auth } from "@/services/auth";
-import { upsertProductSchema, UpsertProductSchema } from "./schema";
+import { upsertProductSchema } from "./schema";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { actionClient } from "@/lib/safe-action";
 
-export const upsertProduct = async (data: UpsertProductSchema) => {
-  const session = await auth();
+export const upsertProduct = actionClient
+  .schema(upsertProductSchema)
+  .action(async ({ parsedInput }) => {
+    const session = await auth();
 
-  if (!session?.user) {
-    throw new Error("Usuário não autorizado.");
-  }
+    if (!session?.user) {
+      return;
+    }
 
-  upsertProductSchema.parse(data);
+    await prisma.product.upsert({
+      where: {
+        id: parsedInput.id || "",
+      },
+      update: {
+        name: parsedInput.name,
+        price: parsedInput.price,
+        stock: parsedInput.stock,
+      },
+      create: {
+        name: parsedInput.name,
+        price: parsedInput.price,
+        stock: parsedInput.stock,
+        userId: session.user.id as string,
+      },
+    });
 
-  await prisma.product.upsert({
-    where: {
-      id: data.id || "",
-    },
-    update: {
-      name: data.name,
-      price: data.price,
-      stock: data.stock,
-    },
-    create: {
-      name: data.name,
-      price: data.price,
-      stock: data.stock,
-      userId: session.user.id as string,
-    },
+    revalidatePath("/products");
   });
-
-  revalidatePath("/products");
-};

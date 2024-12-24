@@ -22,6 +22,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { flattenValidationErrors } from "next-safe-action";
+import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
@@ -33,13 +35,27 @@ type UpsertProductDialogContentProps = {
     price: number;
     stock: number;
   };
-  onSuccess: () => void;
+  closeModal: () => void;
 };
 
 export const UpsertProductDialogContent = ({
   defaultValues,
-  onSuccess,
+  closeModal,
 }: UpsertProductDialogContentProps) => {
+  const { execute: executeUpsertProductAction } = useAction(upsertProduct, {
+    onError: ({ error: { validationErrors } }) => {
+      const flattenedValidationErrors =
+        flattenValidationErrors(validationErrors);
+      toast.error(flattenedValidationErrors.formErrors[0]);
+    },
+    onSuccess: () => {
+      toast.success(
+        `Produto ${isEdditing ? "editado" : "criado"} com sucesso!`
+      );
+      closeModal();
+    },
+  });
+
   const form = useForm<UpsertProductSchema>({
     resolver: zodResolver(upsertProductSchema),
     defaultValues: defaultValues
@@ -53,16 +69,8 @@ export const UpsertProductDialogContent = ({
 
   const isEdditing = !!defaultValues;
 
-  const onSubmit = async (data: UpsertProductSchema) => {
-    try {
-      await upsertProduct(data);
-      onSuccess();
-      toast.success(
-        `Produto ${isEdditing ? "editado" : "criado"} com sucesso!`
-      );
-    } catch (err) {
-      toast.error("Algum erro aconteceu. Tente novamente");
-    }
+  const onSubmit = (data: UpsertProductSchema) => {
+    executeUpsertProductAction(data);
   };
   return (
     <DialogContent>

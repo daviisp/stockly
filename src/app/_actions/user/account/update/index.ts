@@ -1,29 +1,30 @@
 "use server";
 
 import { auth } from "@/services/auth";
-import { updateUserSchema, UpdateUserSchema } from "./schema";
+import { updateUserSchema } from "./schema";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { actionClient } from "@/lib/safe-action";
 
-export const updateUser = async (data: UpdateUserSchema) => {
-  const session = await auth();
+export const updateUser = actionClient
+  .schema(updateUserSchema)
+  .action(async ({ parsedInput }) => {
+    const session = await auth();
 
-  if (!session?.user) {
-    throw new Error("Usuário não autorizado.");
-  }
+    if (!session?.user) {
+      return;
+    }
 
-  updateUserSchema.parse(data);
+    await prisma.user.update({
+      where: {
+        id: session.user.id,
+      },
+      data: {
+        name: parsedInput.name,
+        email: parsedInput.email,
+        image: parsedInput.image,
+      },
+    });
 
-  await prisma.user.update({
-    where: {
-      id: session.user.id,
-    },
-    data: {
-      name: data.name,
-      email: data.email,
-      image: data.image,
-    },
+    revalidatePath("/profile");
   });
-
-  revalidatePath("/profile");
-};

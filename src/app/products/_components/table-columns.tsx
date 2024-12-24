@@ -89,7 +89,7 @@ export const productTableColumns: ColumnDef<ProductsDto>[] = [
               </DropdownMenuContent>
             </DropdownMenu>
             <UpsertProductDialogContent
-              onSuccess={() => setModalIsOpen(false)}
+              closeModal={() => setModalIsOpen(false)}
               defaultValues={{
                 ...row.original,
               }}

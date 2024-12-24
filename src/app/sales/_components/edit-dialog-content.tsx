@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { flattenValidationErrors } from "next-safe-action";
+import { useAction } from "next-safe-action/hooks";
 
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -42,6 +44,17 @@ export const EditSaleDialogContent = ({
   defaultValues,
   onSuccess,
 }: EditSaleDialogContent) => {
+  const { execute: executeUpdateSale } = useAction(updateSale, {
+    onError: ({ error: { validationErrors } }) => {
+      const flattenedValidationErrors =
+        flattenValidationErrors(validationErrors);
+      toast.error(flattenedValidationErrors.formErrors[0]);
+    },
+    onSuccess: () => {
+      toast.success("Venda atualizada com sucesso!");
+    },
+  });
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,17 +64,11 @@ export const EditSaleDialogContent = ({
   });
 
   const onSubmit = async (data: FormSchema) => {
-    try {
-      await updateSale({
-        id: defaultValues.id,
-        productId: defaultValues.productId,
-        productQuantity: data.productQuantity,
-      });
-      onSuccess();
-      toast.success("Venda atualizada com sucesso!");
-    } catch (err) {
-      toast.error("Algum erro aconteceu. Tente novamente");
-    }
+    executeUpdateSale({
+      id: defaultValues.id,
+      productId: defaultValues.productId,
+      productQuantity: data.productQuantity,
+    });
   };
 
   return (

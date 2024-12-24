@@ -3,24 +3,25 @@
 import { auth } from "@/services/auth";
 
 import { prisma } from "@/lib/prisma";
-import { deleteProductSchema, DeleteProductSchema } from "./schema";
+import { deleteProductSchema } from "./schema";
 import { revalidatePath } from "next/cache";
+import { actionClient } from "@/lib/safe-action";
 
-export const deleteProduct = async (data: DeleteProductSchema) => {
-  const session = await auth();
+export const deleteProduct = actionClient
+  .schema(deleteProductSchema)
+  .action(async ({ parsedInput }) => {
+    const session = await auth();
 
-  if (!session?.user) {
-    return;
-  }
+    if (!session?.user) {
+      return;
+    }
 
-  deleteProductSchema.parse(data);
+    await prisma.product.delete({
+      where: {
+        id: parsedInput.id,
+        userId: session.user.id,
+      },
+    });
 
-  await prisma.product.delete({
-    where: {
-      id: data.id,
-      userId: session.user.id,
-    },
+    revalidatePath("/products");
   });
-
-  revalidatePath("/products");
-};

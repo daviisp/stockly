@@ -23,12 +23,25 @@ import {
   updateUserSchema,
 } from "../../_actions/user/account/update/schema";
 import { toast } from "sonner";
+import { useAction } from "next-safe-action/hooks";
+import { flattenValidationErrors } from "next-safe-action";
 
 type ProfileFormProps = {
   user: Session["user"];
 };
 
 export const ProfileForm = ({ user }: ProfileFormProps) => {
+  const { execute: executeUpdateUser } = useAction(updateUser, {
+    onError: ({ error: { validationErrors } }) => {
+      const flattenedValidationErrors =
+        flattenValidationErrors(validationErrors);
+      toast.error(flattenedValidationErrors.formErrors[0]);
+    },
+    onSuccess: () => {
+      toast.success("Perfil atualizado com sucesso!");
+    },
+  });
+
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     user?.image || undefined
   );
@@ -53,17 +66,8 @@ export const ProfileForm = ({ user }: ProfileFormProps) => {
     }
   };
 
-  const onSubmit = async (data: UpdateUserSchema) => {
-    try {
-      await updateUser({
-        ...data,
-        image: selectedImage,
-      });
-      toast.success("Perfil atualizado com sucesso!");
-    } catch (err) {
-      console.error(err);
-      toast.error("Algum erro aconteceu. Tente novamente");
-    }
+  const onSubmit = (data: UpdateUserSchema) => {
+    executeUpdateUser({ ...data, image: selectedImage });
   };
 
   return (

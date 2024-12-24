@@ -45,6 +45,8 @@ import {
   PlusIcon,
   TrashIcon,
 } from "lucide-react";
+import { flattenValidationErrors } from "next-safe-action";
+import { useAction } from "next-safe-action/hooks";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -71,6 +73,17 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 export const CreateSale = ({ productOptions, products }: CreateSaleProps) => {
+  const { execute: executeCreateSale } = useAction(createSale, {
+    onError: ({ error: { validationErrors } }) => {
+      const flattenedValidationErrors =
+        flattenValidationErrors(validationErrors);
+      toast.error(flattenedValidationErrors.formErrors[0]);
+    },
+    onSuccess: () => {
+      toast.success("Venda criada com sucesso!");
+    },
+  });
+
   const [selectedProducts, setSelectedProducts] = useState<SelectedProducts[]>(
     []
   );
@@ -139,16 +152,8 @@ export const CreateSale = ({ productOptions, products }: CreateSaleProps) => {
     });
   };
 
-  const onSubmitSale = async () => {
-    try {
-      await createSale({
-        products: selectedProducts,
-      });
-      toast.success("Venda criada com sucesso!");
-    } catch (err) {
-      toast.error("Algum erro aconteceu. Tente novamente");
-      console.error(err);
-    }
+  const onSubmitSale = () => {
+    executeCreateSale({ products: selectedProducts });
   };
 
   const totalPrice = useMemo(() => {

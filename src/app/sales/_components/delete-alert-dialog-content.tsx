@@ -8,6 +8,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { flattenValidationErrors } from "next-safe-action";
+import { useAction } from "next-safe-action/hooks";
 import React from "react";
 import { toast } from "sonner";
 
@@ -18,13 +20,19 @@ type DeleteAlertDialogContentProps = {
 export const DeleteSaleAlertDialogContent = ({
   id,
 }: DeleteAlertDialogContentProps) => {
-  const onDelete = async () => {
-    try {
-      await deleteSale({ id });
+  const { execute: executeDeleteSale } = useAction(deleteSale, {
+    onError: ({ error: { validationErrors } }) => {
+      const flattenedValidationErrors =
+        flattenValidationErrors(validationErrors);
+      toast.error(flattenedValidationErrors.formErrors[0]);
+    },
+    onSuccess: () => {
       toast.success("Venda deletada com sucesso!");
-    } catch (err) {
-      toast.error("Algum erro aconteceu. Tente novamente");
-    }
+    },
+  });
+
+  const onDelete = () => {
+    executeDeleteSale({ id });
   };
 
   return (
@@ -32,7 +40,7 @@ export const DeleteSaleAlertDialogContent = ({
       <AlertDialogHeader>
         <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
         <AlertDialogDescription>
-          Você está prestes a excluir este produto. Esta ação não pode ser
+          Você está prestes a excluir esta venda. Esta ação não pode ser
           desfeita. Deseja continuar?
         </AlertDialogDescription>
       </AlertDialogHeader>
