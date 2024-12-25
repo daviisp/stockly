@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import {
+  CircleIcon,
   ClipboardCopyIcon,
   EditIcon,
   MoreHorizontal,
@@ -46,10 +47,20 @@ export const productTableColumns: ColumnDef<ProductsDto>[] = [
     header: "Status",
     cell: ({ row }) => {
       if (row.original.stock > 0) {
-        return "Em estoque";
+        return (
+          <div className="flex items-center gap-1.5 bg-[#EBFAF7] w-fit rounded-xl text-xs text-emerald-500 font-semibold py-0.5 px-2">
+            <CircleIcon fill="#00A180" size={8} className="stroke-none" />
+            Disponível
+          </div>
+        );
       }
 
-      return "Esgotado";
+      return (
+        <div className="flex items-center gap-1.5 bg-[#fb8484] w-fit rounded-xl text-xs text-red-700 font-semibold py-0.5 px-2">
+          <CircleIcon fill="#fd0000" size={8} className="stroke-none" />
+          Esgotado
+        </div>
+      );
     },
   },
   {
