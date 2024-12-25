@@ -20,7 +20,7 @@ export const Sidebar = ({ user }: SidebarProps) => {
   };
 
   return (
-    <aside className="hidden sm:block bg-white min-w-64 h-full">
+    <aside className="hidden sm:block bg-white min-w-64">
       <div className="py-6 pl-8">
         <Image
           src="/logo.svg"

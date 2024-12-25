@@ -26,9 +26,11 @@ export default async function RootLayout({
 
   return (
     <html lang="pt-BR">
-      <body className={`${inter.variable} antialiased h-screen bg-[#F8FAFC]`}>
+      <body
+        className={`${inter.variable} antialiased min-h-screen bg-[#F8FAFC]`}
+      >
         {session && <SidebarMobile user={session.user} />}
-        <div className="flex h-screen">
+        <div className="flex min-h-screen">
           {session && <Sidebar user={session.user} />}
           <main className="flex-1 p-5 sm:p-8">{children}</main>
         </div>
