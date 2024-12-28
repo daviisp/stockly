@@ -174,7 +174,7 @@ export const CreateSale = ({ productOptions, products }: CreateSaleProps) => {
             Nova venda
           </Button>
         </SheetTrigger>
-        <SheetContent className="!max-w-[600px]">
+        <SheetContent className="!max-w-[600px] overflow-y-auto">
           <SheetHeader>
             <SheetTitle>Nova venda</SheetTitle>
             <SheetDescription>Insira as informações abaixo</SheetDescription>
