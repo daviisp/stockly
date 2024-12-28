@@ -29,9 +29,9 @@ export default async function RootLayout({
       <body
         className={`${inter.variable} antialiased min-h-screen bg-[#F8FAFC]`}
       >
-        {session && <SidebarMobile user={session.user} />}
+        {session?.user && <SidebarMobile user={session.user} />}
         <div className="flex min-h-screen">
-          {session && <Sidebar user={session.user} />}
+          {session?.user && <Sidebar user={session.user} />}
           <main className="flex-1 p-5 sm:p-8">{children}</main>
         </div>
         <Toaster />
