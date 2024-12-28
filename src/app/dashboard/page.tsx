@@ -10,10 +10,13 @@ import { Last14DaysRevenueCard } from "./_components/last-14-days-revenue-card";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PopularProducts } from "./_components/popular-products";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Stockly - Dashboard",
+};
 
 const DashboardPage = async () => {
-  const data = await getPopularProducts();
-
   return (
     <div>
       <div>

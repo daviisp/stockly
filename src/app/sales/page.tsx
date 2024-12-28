@@ -4,6 +4,11 @@ import { getProducts } from "../products/_data-access/get-products";
 import { CreateSale } from "./_components/create-sale";
 import { getSales } from "./_data-access/get-sales";
 import { saleTableColumns } from "./_components/table-columns";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Stockly - Vendas",
+};
 
 const SalesPage = async () => {
   const products = await getProducts();

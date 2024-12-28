@@ -20,6 +20,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { AlertTriangle } from "lucide-react";
 import { deleteUser } from "../_actions/user/account/delete";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Stockly - Configurações",
+};
 
 const SettingsPage = async () => {
   const data = await getProductsSalesCount();

@@ -9,6 +9,11 @@ import { Button } from "@/components/ui/button";
 import { authWithGoogle } from "@/app/_actions/auth";
 import { GoogleIcon } from "./_components/google-icon";
 import Image from "next/image";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Stockly - Login",
+};
 
 const AuthPage = () => {
   return (

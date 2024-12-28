@@ -14,7 +14,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Stockly",
   description:
-    "Esse é o Stockly, plataforma útil para controlar produtos, vendas e estoques.",
+    "Essa é a Stockly, plataforma útil para controlar produtos, vendas e estoques.",
 };
 
 export default async function RootLayout({

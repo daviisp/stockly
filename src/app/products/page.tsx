@@ -3,6 +3,11 @@ import { TitleWithSubtitle } from "../_components/title-with-subtitle";
 import { getProducts } from "./_data-access/get-products";
 import { productTableColumns } from "./_components/table-columns";
 import { CreateProduct } from "./_components/create-product";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Stockly - Produtos",
+};
 
 const ProductsPage = async () => {
   const products = await getProducts();
